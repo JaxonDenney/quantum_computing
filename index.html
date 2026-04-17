@@ -28,7 +28,8 @@
                         'spin-slow': 'spin 3s linear infinite',
                         'coin-spin': 'coinSpin 0.5s linear infinite',
                         'pulse-glow': 'pulseGlow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'flood': 'floodAnim 1.5s ease-out forwards'
+                        'flood': 'floodAnim 1.5s ease-out forwards',
+                        'float': 'floatAnim 10s ease-in-out infinite'
                     },
                     keyframes: {
                         coinSpin: {
@@ -43,6 +44,10 @@
                             '0%': { backgroundColor: 'transparent' },
                             '50%': { backgroundColor: 'rgba(16, 185, 129, 0.4)' },
                             '100%': { backgroundColor: 'transparent' }
+                        },
+                        floatAnim: {
+                            '0%, 100%': { transform: 'translateY(0px) scale(1)' },
+                            '50%': { transform: 'translateY(-20px) scale(1.05)' }
                         }
                     }
                 }
@@ -150,7 +155,10 @@
         }
     </style>
 </head>
-<body class="font-sans selection:bg-quantum-secondary selection:text-white flex flex-col min-h-screen">
+<body class="font-sans selection:bg-quantum-secondary selection:text-white flex flex-col min-h-screen relative">
+
+    <!-- NEW: Animated Quantum Background Canvas -->
+    <canvas id="quantum-bg" class="fixed inset-0 w-full h-full pointer-events-none z-0 opacity-40"></canvas>
 
     <!-- Navigation -->
     <nav class="fixed w-full z-50 glass-panel border-b-0 shadow-lg">
@@ -198,7 +206,7 @@
     </nav>
 
     <!-- Main Content Area -->
-    <main class="flex-grow pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+    <main class="flex-grow pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full relative z-10">
 
         <!-- PAGE 1: HOMEPAGE -->
         <section id="home" class="page-section active">
@@ -251,62 +259,99 @@
 
             </div>
 
-            <div class="grid md:grid-cols-2 gap-12 mt-4">
-                <div class="glass-panel p-8 rounded-2xl">
-                    <h2 class="font-display text-3xl font-bold text-quantum-accent mb-4 flex items-center gap-3">
-                        <svg class="w-8 h-8 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                        Hitting the 'Quantum Wall'
-                    </h2>
-                    <p class="text-gray-300 leading-relaxed mb-4">
-                        For decades, computing relied on Moore's Law: shrinking transistors to pack more power into silicon. But we've hit a physical breaking point. 
-                    </p>
-                    <ul class="space-y-3 text-gray-400 mt-6">
-                        <li class="flex gap-2">
-                            <span class="text-quantum-secondary shrink-0">▹</span>
-                            <span><strong>Atomic Scale Limits:</strong> Transistors are now the size of just a few atoms.</span>
-                        </li>
-                        <li class="flex gap-2">
-                            <span class="text-quantum-secondary shrink-0">▹</span>
-                            <span><strong>Quantum Tunneling:</strong> At this microscopic scale, electrons literally "leak" through physical barriers, rendering classical logic useless.</span>
-                        </li>
-                        <li class="flex gap-2">
-                            <span class="text-quantum-secondary shrink-0">▹</span>
-                            <span><strong>The Heat Problem:</strong> Packing more power into classical chips generates unsustainable thermal density.</span>
-                        </li>
-                    </ul>
+            <div class="flex flex-col gap-12 mt-4">
+                <!-- Hitting the Quantum Wall - Upgraded to Full Width -->
+                <div class="glass-panel p-8 md:p-12 rounded-3xl">
+                    <div class="flex flex-col md:flex-row gap-8 items-center">
+                        <div class="md:w-1/3">
+                            <h2 class="font-display text-3xl md:text-4xl font-bold text-quantum-accent mb-4 flex items-center gap-3">
+                                <svg class="w-10 h-10 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                                Hitting the 'Wall'
+                            </h2>
+                            <p class="text-gray-300 leading-relaxed text-lg">
+                                For decades, computing relied on Moore's Law: shrinking transistors to pack more power into silicon. But we've hit a physical breaking point. 
+                            </p>
+                        </div>
+                        <div class="md:w-2/3 w-full">
+                            <ul class="space-y-4 text-gray-400 bg-[#020617]/50 p-6 rounded-2xl border border-gray-800 shadow-inner">
+                                <li class="flex gap-3 items-start">
+                                    <span class="text-quantum-secondary shrink-0 mt-1">▹</span>
+                                    <span><strong class="text-white">Atomic Scale Limits:</strong> Transistors are now the size of just a few atoms.</span>
+                                </li>
+                                <li class="flex gap-3 items-start">
+                                    <span class="text-quantum-secondary shrink-0 mt-1">▹</span>
+                                    <span><strong class="text-white">Quantum Tunneling:</strong> At this microscopic scale, electrons literally "leak" through physical barriers, rendering classical logic useless.</span>
+                                </li>
+                                <li class="flex gap-3 items-start">
+                                    <span class="text-quantum-secondary shrink-0 mt-1">▹</span>
+                                    <span><strong class="text-white">The Heat Problem:</strong> Packing more power into classical chips generates unsustainable thermal density.</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="glass-panel p-8 rounded-2xl">
-                    <h2 class="font-display text-3xl font-bold text-quantum-secondary mb-6">The Paradigm Shift</h2>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse min-w-[300px]">
+                <!-- NEW SECTION: Detailed Comparison Table -->
+                <div class="glass-panel p-8 md:p-12 rounded-3xl relative overflow-hidden shadow-2xl">
+                    <div class="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-quantum-secondary rounded-full mix-blend-multiply filter blur-3xl opacity-20 pointer-events-none animate-float"></div>
+                    
+                    <h2 class="font-display text-3xl md:text-4xl font-bold text-white mb-8 text-center">The Paradigm Shift: <span class="text-gradient">Classical vs. Quantum</span></h2>
+                    
+                    <div class="overflow-x-auto rounded-2xl border border-gray-800 bg-[#020617]/50 shadow-inner">
+                        <table class="w-full text-left border-collapse min-w-[800px]">
                             <thead>
-                                <tr class="border-b border-gray-700 text-gray-300">
-                                    <th class="pb-3 font-semibold">Feature</th>
-                                    <th class="pb-3 font-semibold text-gray-400">Classical Computing</th>
-                                    <th class="pb-3 font-semibold text-quantum-accent">Quantum Computing</th>
+                                <tr class="bg-gray-900/60 text-gray-300 border-b-2 border-gray-700">
+                                    <th class="p-5 font-display font-bold text-lg text-white w-1/5">Feature</th>
+                                    <th class="p-5 font-display font-bold text-lg text-gray-400 w-2/5">
+                                        Classical Computing 
+                                        <span class="text-sm font-normal text-gray-500 block mt-1">(Your Laptop)</span>
+                                    </th>
+                                    <th class="p-5 font-display font-bold text-lg text-quantum-accent w-2/5">
+                                        Quantum Computing
+                                        <span class="text-sm font-normal text-quantum-accent/60 block mt-1">(The Future)</span>
+                                    </th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-800">
-                                <tr>
-                                    <td class="py-4 text-gray-400">Processing</td>
-                                    <td class="py-4">Sequential (One at a time)</td>
-                                    <td class="py-4 text-quantum-accent font-medium">Simultaneous (All at once)</td>
+                            <tbody class="divide-y divide-gray-800/80">
+                                <tr class="hover:bg-white/5 transition-colors duration-200">
+                                    <td class="p-5 font-semibold text-white">Basic Unit</td>
+                                    <td class="p-5 text-gray-400">Bit <span class="text-sm">(Coin sitting flat)</span></td>
+                                    <td class="p-5 text-quantum-accent font-medium">Qubit <span class="text-sm text-quantum-accent/70">(Spinning coin)</span></td>
                                 </tr>
-                                <tr>
-                                    <td class="py-4 text-gray-400">Teamwork</td>
-                                    <td class="py-4">Independent Bits</td>
-                                    <td class="py-4 text-quantum-accent font-medium">Entangled Qubits</td>
+                                <tr class="hover:bg-white/5 transition-colors duration-200">
+                                    <td class="p-5 font-semibold text-white">Data State</td>
+                                    <td class="p-5 text-gray-400">Binary: Always exactly a 1 or a 0.</td>
+                                    <td class="p-5 text-gray-300"><strong class="text-white">Superposition:</strong> Can be a 1, a 0, or varying proportions of both simultaneously.</td>
                                 </tr>
-                                <tr>
-                                    <td class="py-4 text-gray-400">Hardware</td>
-                                    <td class="py-4">Silicon Transistors</td>
-                                    <td class="py-4 text-quantum-accent font-medium">Superconductors / Ions</td>
+                                <tr class="hover:bg-white/5 transition-colors duration-200">
+                                    <td class="p-5 font-semibold text-white">Processing</td>
+                                    <td class="p-5 text-gray-400">Sequential: Explores one path or calculation at a time.</td>
+                                    <td class="p-5 text-gray-300"><strong class="text-white">Simultaneous:</strong> Explores vast combinations of paths at the exact same time.</td>
                                 </tr>
-                                <tr>
-                                    <td class="py-4 text-gray-400">Environment</td>
-                                    <td class="py-4">Room Temperature</td>
-                                    <td class="py-4 text-quantum-accent font-medium">Near Absolute Zero (-273°C)</td>
+                                <tr class="hover:bg-white/5 transition-colors duration-200">
+                                    <td class="p-5 font-semibold text-white">Teamwork</td>
+                                    <td class="p-5 text-gray-400">Independent: Bits operate on their own.</td>
+                                    <td class="p-5 text-gray-300"><strong class="text-white">Entanglement:</strong> Qubits are linked; observing or changing one instantly dictates the state of another.</td>
+                                </tr>
+                                <tr class="hover:bg-white/5 transition-colors duration-200">
+                                    <td class="p-5 font-semibold text-white">Hardware Core</td>
+                                    <td class="p-5 text-gray-400">Transistors: Microscopic electrical switches etched into silicon.</td>
+                                    <td class="p-5 text-gray-300">Superconductors/Ions: Highly sensitive atomic particles or circuits manipulated by lasers and microwaves.</td>
+                                </tr>
+                                <tr class="hover:bg-white/5 transition-colors duration-200">
+                                    <td class="p-5 font-semibold text-white">Environment</td>
+                                    <td class="p-5 text-gray-400">Operates at room temperature; sits on your desk or in your pocket.</td>
+                                    <td class="p-5 text-gray-300">Requires extreme isolation, vacuum chambers, and temperatures near absolute zero (-460°F) to function without crashing.</td>
+                                </tr>
+                                <tr class="hover:bg-white/5 transition-colors duration-200">
+                                    <td class="p-5 font-semibold text-white">Superpower</td>
+                                    <td class="p-5 text-gray-400">Everyday tasks, web browsing, databases, standard mathematics, and logical sequences.</td>
+                                    <td class="p-5 text-gray-300">Simulating molecular biology, discovering drugs, perfect logistics, and breaking traditional encryption.</td>
+                                </tr>
+                                <tr class="hover:bg-white/5 transition-colors duration-200">
+                                    <td class="p-5 font-semibold text-white">Current Era</td>
+                                    <td class="p-5 text-gray-400">Mature: Powerful, ubiquitous, but hitting the physical limits of Moore's Law.</td>
+                                    <td class="p-5 text-gray-300">Experimental: In early development; highly specialized and currently prone to errors from microscopic background noise.</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -323,7 +368,7 @@
             </div>
 
             <div class="glass-panel p-8 md:p-12 rounded-3xl mb-12 relative overflow-hidden">
-                <div class="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-quantum-secondary rounded-full mix-blend-multiply filter blur-3xl opacity-20 pointer-events-none"></div>
+                <div class="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-quantum-secondary rounded-full mix-blend-multiply filter blur-3xl opacity-20 pointer-events-none animate-float" style="animation-delay: 2s;"></div>
                 
                 <h2 class="font-display text-3xl font-bold mb-6 text-white">The "Maze Runner" Analogy</h2>
                 <div class="grid md:grid-cols-2 gap-8 items-center mb-8">
@@ -1054,6 +1099,155 @@
                 resultBox.style.opacity = '1';
             }, 300);
         }
+
+        /* --- QUANTUM BACKGROUND SIMULATION --- */
+        const canvas = document.getElementById('quantum-bg');
+        const ctx = canvas.getContext('2d');
+        let particlesArray = [];
+
+        function setCanvasSize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        class Qubit {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.baseSize = Math.random() * 2 + 1.5;
+                this.speedX = (Math.random() - 0.5) * 0.4;
+                this.speedY = (Math.random() - 0.5) * 0.4;
+                
+                // Color: Emerald Green (16, 185, 129) or Electric Indigo (99, 102, 241)
+                this.isEmerald = Math.random() > 0.5;
+                this.r = this.isEmerald ? 16 : 99;
+                this.g = this.isEmerald ? 185 : 102;
+                this.b = this.isEmerald ? 129 : 241;
+                
+                // Quantum State variables
+                this.phase = Math.random() * Math.PI * 2; // For probability wave pulsing
+                this.fluctuationSpeed = Math.random() * 0.02 + 0.01;
+                
+                // Superposition variables
+                this.isSuperposition = Math.random() > 0.85;
+                this.superpositionOffset = this.isSuperposition ? 15 : 0;
+            }
+
+            update() {
+                // Wave-like drifting (Probability Wave)
+                this.x += this.speedX;
+                this.y += this.speedY + (Math.sin(this.phase) * 0.3);
+                this.phase += this.fluctuationSpeed;
+                
+                // Bounce off edges
+                if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+
+                // Randomly enter or collapse Superposition
+                if (Math.random() < 0.005) {
+                    this.isSuperposition = !this.isSuperposition;
+                }
+
+                // Animate the split/collapse
+                if (this.isSuperposition) {
+                    this.superpositionOffset = Math.min(this.superpositionOffset + 0.5, 20);
+                } else {
+                    this.superpositionOffset = Math.max(this.superpositionOffset - 1, 0);
+                }
+            }
+
+            draw() {
+                // Pulse effect based on sine wave
+                let pulseOpacity = (Math.sin(this.phase) * 0.3) + 0.5;
+                let currentSize = this.baseSize + (Math.sin(this.phase) * 0.5);
+
+                // Draw main Qubit (Inner core + Outer glow for performance instead of shadowBlur)
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, currentSize * 2.5, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(${this.r}, ${this.g}, ${this.b}, ${pulseOpacity * 0.2})`;
+                ctx.fill();
+                
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, currentSize, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(${this.r}, ${this.g}, ${this.b}, ${pulseOpacity + 0.2})`;
+                ctx.fill();
+
+                // Draw Superposition "Ghost" Qubit
+                if (this.superpositionOffset > 0) {
+                    let ghostOpacity = pulseOpacity * (this.superpositionOffset / 20) * 0.6;
+                    
+                    // The Ghost Dot
+                    ctx.beginPath();
+                    ctx.arc(this.x + this.superpositionOffset, this.y - (this.superpositionOffset * 0.5), currentSize, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(${this.r}, ${this.g}, ${this.b}, ${ghostOpacity})`;
+                    ctx.fill();
+
+                    // The Probability Link (Dashed line indicating they are the same particle)
+                    ctx.beginPath();
+                    ctx.moveTo(this.x, this.y);
+                    ctx.lineTo(this.x + this.superpositionOffset, this.y - (this.superpositionOffset * 0.5));
+                    ctx.strokeStyle = `rgba(${this.r}, ${this.g}, ${this.b}, ${ghostOpacity + 0.2})`;
+                    ctx.lineWidth = 1;
+                    ctx.setLineDash([2, 3]);
+                    ctx.stroke();
+                    ctx.setLineDash([]); // Reset dash
+                }
+            }
+        }
+
+        function initParticles() {
+            particlesArray = [];
+            // Dynamically scale particle count based on screen size to prevent mobile lag
+            const numberOfParticles = Math.min((canvas.width * canvas.height) / 12000, 80);
+            for (let i = 0; i < numberOfParticles; i++) {
+                particlesArray.push(new Qubit());
+            }
+        }
+
+        function connectEntanglement() {
+            let maxDistance = 130;
+            for (let a = 0; a < particlesArray.length; a++) {
+                for (let b = a; b < particlesArray.length; b++) {
+                    let dx = particlesArray[a].x - particlesArray[b].x;
+                    let dy = particlesArray[a].y - particlesArray[b].y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < maxDistance) {
+                        let opacity = 1 - (distance / maxDistance);
+                        // Entanglement beam (Electric Indigo)
+                        ctx.strokeStyle = `rgba(99, 102, 241, ${opacity * 0.25})`; 
+                        ctx.lineWidth = 1.5;
+                        ctx.beginPath();
+                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Connect first so dots draw on top of lines
+            connectEntanglement(); 
+            
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+                particlesArray[i].draw();
+            }
+            requestAnimationFrame(animateParticles);
+        }
+
+        // Setup and start background animation
+        window.addEventListener('resize', () => {
+            setCanvasSize();
+            initParticles();
+        });
+        
+        setCanvasSize();
+        initParticles();
+        animateParticles();
 
     </script>
 </body>
