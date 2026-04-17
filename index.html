@@ -909,7 +909,7 @@
         const mazeStatus = document.getElementById('maze-status');
         let cells = [];
         let mazeInterval;
-        const targetIndex = 23; // Target block
+        let targetIndex = 23; // Target block, now a variable so we can change it
 
         function initMaze() {
             mazeGrid.innerHTML = '';
@@ -924,6 +924,10 @@
 
         function resetMaze() {
             clearInterval(mazeInterval);
+            
+            // Randomize the target spot between 0 and 24 every time it resets!
+            targetIndex = Math.floor(Math.random() * 25); 
+            
             cells.forEach(c => {
                 c.style.backgroundColor = '';
                 c.classList.remove('animate-pulse-glow', 'animate-flood', 'shadow-[0_0_15px_#10B981]');
